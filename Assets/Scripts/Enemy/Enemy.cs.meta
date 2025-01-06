@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Scripts/Enemy.cs.meta
+guid: 0c797cfaee38e814bb5f0c35d409a050
+========
+guid: 7e448d12d8cc9be4c954e1dd64abb45b
+>>>>>>>> 447368de6159aa5f14cee7197c83fb7348fd937a:Assets/Scripts/Golam.cs.meta
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
