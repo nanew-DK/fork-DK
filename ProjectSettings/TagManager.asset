@@ -7,6 +7,7 @@ TagManager:
   - Rope
   - Enemy
   - Boss
+  - StopLine
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - Ground
   - 
   - 
-  - 
+  - Enemy
   - PlayerDamaged
   - Player
   - 

@@ -7,6 +7,7 @@ public class Golam : EnemyMove
     [SerializeField] private int attackPower; // 공격력 설정
     [SerializeField] public CircleCollider2D attackRange; // 공격 범위 설정
     [SerializeField] private float attackDelay = 1.5f; // 공격 딜레이
+    [SerializeField] private float pushBackForce = 5f;
 
     private float attackCooldown = 0f; // 현재 쿨타임 상태
 
@@ -107,7 +108,18 @@ public class Golam : EnemyMove
     {
         Debug.Log("아야");
         Hp -= damage;
+
+        // 넉백 방향 계산
+        Vector2 knockbackDirection = (transform.position - player.position).normalized; // 플레이어와 반대 방향
+        float knockbackForce = 5f; // 넉백 세기 (필요에 따라 값 조절)
+
+        // 넉백 적용
+        rigid.velocity = new Vector2(knockbackDirection.x * knockbackForce, rigid.velocity.y);
+
         if (Hp <= 0)
+        {
             Destroy(this.gameObject); // 체력이 0 이하일 때 골렘 사망
+        }
     }
+
 }

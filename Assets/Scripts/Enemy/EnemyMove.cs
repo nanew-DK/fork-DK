@@ -7,6 +7,7 @@ public class EnemyMove : MonoBehaviour
 {
     [SerializeField] protected Rigidbody2D rigid;
     [SerializeField] protected SpriteRenderer render;
+    [SerializeField] protected BoxCollider2D boxCollider;
 
     [SerializeField] protected float speed = 2.5f;
     [SerializeField] protected float followDistance = 5f;    // 추격 시작 거리
@@ -22,6 +23,8 @@ public class EnemyMove : MonoBehaviour
     protected virtual void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+        render = GetComponent<SpriteRenderer>();
+        boxCollider = GetComponent<BoxCollider2D>(); // BoxCollider2D 컴포넌트 가져오기
         player = GameObject.FindWithTag("Player").transform;
         Think(); // 초기 이동 방향 설정
     }
@@ -93,7 +96,7 @@ public class EnemyMove : MonoBehaviour
         if (player != null)
         {
             PlayerHP playerScript = player.GetComponent<PlayerHP>();
-            if (playerScript != null)
+            
                 if (playerScript != null)
                 {
                     playerScript.TakeDamage(1, this.transform.position);
@@ -126,6 +129,15 @@ public class EnemyMove : MonoBehaviour
     // 이거 istrigger로 가면 사거리가 trigger라서 플레이어가 적 사거리를 때려도 적이 죽어버린다
     // collision으로 가면 총알과 검이 둘 다 trigger 여서 적의 체력이 닳지 않는다
 
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 충돌한 객체가 "Player" 또는 플레이어의 공격인지 확인
+        if (collision.gameObject.CompareTag("PlayerAttack"))
+        {
+            TakeDamage(1); //데미지 1
+        }
+    }
 
     // 데미지 사망
     public virtual void TakeDamage(int damage)

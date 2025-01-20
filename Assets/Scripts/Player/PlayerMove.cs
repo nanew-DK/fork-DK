@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
@@ -12,11 +13,11 @@ using UnityEngine.UI;
 public class PlayerMove : MonoBehaviour
 {
     //플레이어 좌우 이동
-    [SerializeField] private float speed = 8f;//플레이어 스피드
+    [SerializeField] private float speed = 2f;//플레이어 스피드
     private float moveInput = 0f;//플레이어 좌우이동 input
     private bool isFacingRight = true;//좌우 처다보는것
     //플레이어 점프
-    private float jumpingPower = 16f;//점프 높이
+    private float jumpingPower = 15f;//점프 높이
 
     //플레이어 로프 이동
     private HingeJoint2D joint;
@@ -29,10 +30,19 @@ public class PlayerMove : MonoBehaviour
     //플레이어 대쉬
     private bool isDash = false;
     private bool canDash = true;
+
+    [Header("Dash Settings")]
     [SerializeField] private float dashDuration = 0.2f;//대쉬 지속시간
     [SerializeField] private float dashCoolTime = 2.0f;//대쉬 쿨타임
-    [SerializeField] private float dashSpeed = 10.0f;//대쉬 속도
+    [SerializeField] private float dashSpeed = 20.0f;//대쉬 속도
 
+    
+    public float dashCooldown = 1f; // 대시 재사용 대기 시간
+    private Vector2 dashDirection;
+
+    private bool isDashing = false;
+    private float dashTime;
+    private float lastDashTime;
     //그외
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private Transform groundCheck;
@@ -80,7 +90,7 @@ public class PlayerMove : MonoBehaviour
         }
         if (Input.GetKeyDown(KeySetting.Keys[KeyAction.UP]) && IsGrounded())
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
+            rb.velocity += new Vector2(0, jumpingPower);
         }
         if (Input.GetKey(KeySetting.Keys[KeyAction.UP]) && isOnRope)
         {
@@ -98,11 +108,16 @@ public class PlayerMove : MonoBehaviour
         }
         if (Input.GetKeyUp(KeySetting.Keys[KeyAction.UP]) && rb.velocity.y > 0f)
         {
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+            //rb.velocity += new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
         }
-        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.DASH]) && canDash && !isDash)
+        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.DASH]) && Time.time >= lastDashTime + dashCooldown )
         {
-            StartCoroutine(dash());
+            //StartCoroutine(dash());
+            StartDash();
+        }
+        if (isDashing && Time.time >= dashTime)
+        {
+            EndDash();
         }
         if (Input.GetKeyDown(KeySetting.Keys[KeyAction.INTERACTION]) && isOnRope)
         {
@@ -118,6 +133,36 @@ public class PlayerMove : MonoBehaviour
         }
 
         Flip();
+    }
+
+    private void StartDash()
+    {
+        isDashing = true;
+        dashTime = Time.time + dashDuration;
+        lastDashTime = Time.time;
+
+        // 대시 방향 설정 (현재 이동 방향 기준)
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+
+        if (horizontalInput == 0 && verticalInput == 0)
+        {
+            // 대시 방향이 없으면 마지막 이동 방향으로 설정
+            dashDirection = transform.localScale.x > 0 ? Vector2.right : Vector2.left;
+        }
+        else
+        {
+            dashDirection = new Vector2(horizontalInput, verticalInput).normalized;
+        }
+        rb.velocity = Vector2.zero;
+        rb.velocity += new Vector2( dashDirection.x * dashSpeed*4f,0); // 대시 속도 적용
+    }
+
+    private void EndDash()
+    {
+        isDashing = false;
+        //rb.velocity = Vector2.zero; // 대시 후 정지
+        rb.velocity -= new Vector2(dashDirection.x * dashSpeed * 3f, 0);
     }
 
     IEnumerator Parrying()
@@ -150,6 +195,7 @@ public class PlayerMove : MonoBehaviour
     }
     IEnumerator UpRope()
     {
+        
         if (Rope.FindHead(linkedHinge) != linkedHinge.connectedBody)
         {
             ableRope = true;
@@ -179,23 +225,7 @@ public class PlayerMove : MonoBehaviour
         yield return new WaitForSeconds(ropeCooltime);
         ableRope = false;
     }
-    IEnumerator dash()
-    {
-        isDash = true;
-        canDash = false;
-
-        Debug.Log("Dash!");
-
-        //rb.AddForce(new Vector2(horizontal* dashSpeed, 1f), ForceMode2D.Impulse);  // 대시 힘 가하기
-
-        float dashDirection = transform.localScale.x > 0 ? 1 : -1;
-        rb.velocity = new Vector2(dashDirection * dashSpeed, rb.velocity.y);
-
-        yield return new WaitForSeconds(dashDuration);
-        isDash = false;
-        yield return new WaitForSeconds(dashCoolTime);
-        canDash = true;
-    }
+    
     private void FixedUpdate()
     {
 
@@ -203,10 +233,16 @@ public class PlayerMove : MonoBehaviour
         {
             rb.AddForce(new Vector2(ropeForce * moveInput, 0f));
         }
-        else
+
+        else if (rb.velocity.x >= -speed && rb.velocity.x <= speed)
         {
-            rb.velocity = new Vector2(moveInput * speed, rb.velocity.y);
+            if (moveInput != 0)
+            {
+                rb.velocity += new Vector2(moveInput * speed / 8, 0);
+                Debug.Log(rb.velocity.x);
+            }
         }
+        
 
     }
 
@@ -271,6 +307,15 @@ public class PlayerMove : MonoBehaviour
         //무적판정 풀림
         gameObject.layer = LayerMask.NameToLayer("Player"); ; // 무적 레이어 해제
         spriteRenderer.color = new Color(1, 1, 1, 1);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 대시 중 벽에 충돌하면 대시 종료
+        if (isDashing)
+        {
+            EndDash();
+        }
     }
 
 }

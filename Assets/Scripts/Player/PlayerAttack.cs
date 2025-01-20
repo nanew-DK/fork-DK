@@ -14,7 +14,7 @@ public class PlayerAttack : MonoBehaviour
 
     private bool canSwordAttack = true;
     private bool canGunAttack = true;
-    
+
     //총칼에 명령전달
     Sword S;
     Gun G;
