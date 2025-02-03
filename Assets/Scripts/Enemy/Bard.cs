@@ -8,7 +8,6 @@ public class Bard : EnemyMove
 {
     public GameObject attackRange;
     public GameObject buffPrefab;    // 버프 범위
-    //public GameObject chargeBar;    // 차지 UI
 
     private CircleCollider2D rangeCollider;
 
@@ -19,6 +18,7 @@ public class Bard : EnemyMove
     private float chargeTime = 0;
     private bool isPlayerDetected = false;
     private bool Wait = true;
+    private bool isChargingAnimPlayed = false;
 
 
     //인식범위 받기
@@ -26,7 +26,6 @@ public class Bard : EnemyMove
     {
         rangeCollider = attackRange.GetComponent<CircleCollider2D>();
         rangeCollider.isTrigger = true;
-        //GameObject CB = Instantiate(chargeBar, transform.position, transform.rotation);
     }
     private void Update()
     {
@@ -34,6 +33,11 @@ public class Bard : EnemyMove
         if ( chargeTime >= 3f)
         {
             Music();
+        }
+        if (chargeTime >= 2.2f && !isChargingAnimPlayed)
+        {
+            anim.SetTrigger("isCharging");
+            isChargingAnimPlayed = true; // 애니메이션 실행됨
         }
         //비파 치는 시간
         if (isPlayerDetected)
@@ -53,7 +57,6 @@ public class Bard : EnemyMove
         if (collision.tag == "Player")
         {
             speed = 0;
-            Debug.Log("플레이어 감지");
             isPlayerDetected = true;
         }
     }
@@ -82,5 +85,6 @@ public class Bard : EnemyMove
         chargeTime = 0;
         GameObject currentBuff = Instantiate(buffPrefab, transform.position, Quaternion.identity);
         Destroy(currentBuff, 1f);
+        isChargingAnimPlayed = false; // 애니메이션 실행됨
     }
 }

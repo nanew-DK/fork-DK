@@ -8,20 +8,21 @@ TagManager:
   - Enemy
   - Boss
   - StopLine
+  - PlayerAttack
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - EnemyCollider
   - Water
   - UI
   - Ground
   - 
   - 
-  - Enemy
+  - 
   - PlayerDamaged
   - Player
-  - 
+  - Enemy
   - 
   - 
   - 

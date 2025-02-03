@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2803494831269818921}
   - component: {fileID: 6387786754916865656}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: ResourceShortRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -275,7 +275,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1987480552556984619}
   - component: {fileID: 13508176257822772}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Collider
   m_TagString: Enemy
   m_Icon: {fileID: 0}

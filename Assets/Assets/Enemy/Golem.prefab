@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4861054621558294204}
   - component: {fileID: 6057924323259121459}
   - component: {fileID: 2836302640175814669}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Golem
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -174,13 +174,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigid: {fileID: 4861054621558294204}
   render: {fileID: 6317299383213196137}
+  boxCollider: {fileID: 0}
   speed: 2.5
   followDistance: 5
   stopChaseRange: 3.5
   Hp: 10
+  knockbackForce: 10
   attackPower: 3
   attackRange: {fileID: 6272420437247885383}
   attackDelay: 1.5
+  pushBackForce: 5
 --- !u!1001 &2289337857201996259
 PrefabInstance:
   m_ObjectHideFlags: 0

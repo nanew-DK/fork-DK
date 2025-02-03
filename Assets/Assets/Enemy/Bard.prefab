@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 5935214792383540533}
   - component: {fileID: 2631745710600574966}
   - component: {fileID: 6874067678321268496}
-  m_Layer: 0
+  - component: {fileID: 5256010079337246120}
+  m_Layer: 3
   m_Name: Bard
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.14647704, y: 0.14647704, z: 0.14647704}
+  m_LocalScale: {x: 0.15501666, y: 0.15501666, z: 0.15501666}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6891914042448543132}
@@ -120,7 +121,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.6408353}
+  m_Offset: {x: 0, y: -0.51053476}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -131,7 +132,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 8.109003, y: 25.469826}
+  m_Size: {x: 8.109003, y: 25.209225}
   m_EdgeRadius: 0
 --- !u!50 &2631745710600574966
 Rigidbody2D:
@@ -174,15 +175,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigid: {fileID: 2631745710600574966}
   render: {fileID: 6531749328257218095}
+  boxCollider: {fileID: 0}
   speed: 2.5
   followDistance: 1
   stopChaseRange: 2
   Hp: 5
+  knockbackForce: 10
   attackRange: {fileID: 8926651971733434597, guid: b1c1e0bb87c20bd41befa97c90854883, type: 3}
   buffPrefab: {fileID: 2351813543303048020, guid: 4a9dfdfebde04d845b196ff59f598748, type: 3}
   Attackspeed: 10
   increaseRate: 1
   decreaseRate: 0.5
+--- !u!95 &5256010079337246120
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7923860226349301516}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6630629e6ed927743918f1cd12424e16, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &1805578071765018145
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -32,11 +32,12 @@ public class EnemyWeapon : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             PlayerHP playerScript = collision.gameObject.GetComponent<PlayerHP>();
-            if (playerScript != null&&behavior.GetAttackMode())
+            if (playerScript != null && behavior.GetAttackMode())
             {
-                playerScript.TakeDamage(WeaponDamage,transform.position);
-                Debug.Log("Enemy hit Player  Damage:"+ WeaponDamage);
+                playerScript.TakeDamage((int)WeaponDamage, transform.position); // float을 int로 변환
+                Debug.Log("Enemy hit Player  Damage: " + WeaponDamage);
             }
         }
     }
+
 }

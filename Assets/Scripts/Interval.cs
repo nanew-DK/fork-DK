@@ -7,10 +7,11 @@ public class Interval : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] private GameObject Size;
 
-    private int numOfEnemies = 0;
-    private bool isPlayerInterval=false;
-    private bool stageClear=false;
-    bool doorOpen=false;
+    public int numOfEnemies = 0;
+    public bool isPlayerInterval=false;
+    public bool stageClear=false;
+    public bool doorOpen=false;
+    public GameObject door;
 
 
    void Start()
@@ -37,6 +38,7 @@ public class Interval : MonoBehaviour
         {
             
             Debug.Log("다음 구간으로 이동");
+            Destroy(door);
             doorOpen = true;
         }
 

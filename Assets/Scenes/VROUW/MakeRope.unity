@@ -304,8 +304,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6e7b43a68f2fde4dbfa9e96afda712b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HpBarSlider: {fileID: 1766806861}
+  heartPrefab: {fileID: 0}
   maxHP: 5
+  currentHP: 5
+  heartObjects: []
+  invincibilityDuration: 1
 --- !u!114 &104445384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,7 +334,6 @@ MonoBehaviour:
     m_Bits: 64
   curHealth: 0
   maxHealth: 0
-  HpBarSlider: {fileID: 0}
   shield: {fileID: 772905304}
 --- !u!61 &104445385
 BoxCollider2D:

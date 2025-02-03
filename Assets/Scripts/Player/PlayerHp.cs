@@ -1,65 +1,77 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class PlayerHP : MonoBehaviour
 {
-    [SerializeField] private Slider HpBarSlider; // UI 슬라이더
-    public float maxHP = 100;     // 최대 HP
-    private float currentHP;      // 현재 HP
+    public GameObject heartPrefab;  // 하트 프리팹
+    public int maxHP = 5;  // 최대 체력
+    public int currentHP = 5;  // 현재 체력
+    public List<GameObject> heartObjects = new List<GameObject>();  // 하트 GameObject 리스트
 
-    PlayerMove Playerscript;
-    PlayerAttack PlayerAtk;
+    private bool isInvincible = false;  // 무적 상태 여부
+    public float invincibilityDuration = 1f;  // 무적 상태 지속 시간
 
     void Start()
     {
-        // 초기 HP 설정
-        currentHP = maxHP;
-
-        HpBarSlider.maxValue = maxHP;
-
-        // 슬라이더의 초기 값 설정
-        HpBarSlider.value = currentHP;
-
-        Playerscript = GetComponent<PlayerMove>();
+        CreateHearts();  // 게임 시작 시 하트 객체 생성
+        UpdateHearts();  // 초기 하트 이미지 업데이트
     }
 
-    public void TakeDamage(float damage, Vector2 targetpos)
+    // 하트 프리팹을 이용해 하트 객체 생성
+    void CreateHearts()
     {
-        if(Playerscript.GetParrying()==true)
+        for (int i = 0; i < maxHP; i++)
         {
-            StartCoroutine(Playerscript.ParryingSuccess());
-            return;
+            GameObject heart = Instantiate(heartPrefab, transform); // 프리팹을 인스턴스화하여 부모로 설정
+            heartObjects.Add(heart);  // 하트 객체 리스트에 추가
         }
+    }
+
+    // 체력 감소 처리
+    public void TakeDamage(int damage, Vector2 targetpos)
+    {
+        // 무적 상태일 경우 데미지 무효화
+        if (isInvincible) return;
+
         currentHP -= damage;
-        // 체력이 0 이하인지 확인
+
         if (currentHP <= 0)
         {
             currentHP = 0;
-            Die(); // 사망 처리
+            Die();
         }
-        CheckHp(); // 체력 UI 갱신
-        Playerscript.OnDamaged(targetpos);//넉백
+
+        // 하트 업데이트
+        UpdateHearts();
+
+        // 무적 상태 시작
+        StartCoroutine(InvincibilityCoroutine());
     }
 
-    private void Die()
+    // 하트 상태 업데이트
+    void UpdateHearts()
     {
-        Debug.Log("플레이어 사망!");
+        for (int i = 0; i < heartObjects.Count; i++)
+        {
+            // 현재 체력에 맞는 하트를 활성화 또는 비활성화
+            heartObjects[i].SetActive(i < currentHP);
+        }
+    }
+
+    // 플레이어 사망 처리
+    public void Die()
+    {
+        Debug.Log("플레이어 사망");
         SceneManager.LoadScene("Gameover");
     }
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            //DecreaseHP(1);  // 충돌 시 HP 1 감소*
-        }
-    }
 
-    public void CheckHp() //hp 상시 업데이트
+    // 무적 상태 코루틴
+    private IEnumerator InvincibilityCoroutine()
     {
-        if (HpBarSlider != null)
-            HpBarSlider.value = currentHP;
+        isInvincible = true;  // 무적 상태 시작
+        yield return new WaitForSeconds(invincibilityDuration);  // 지정된 시간 동안 대기
+        isInvincible = false;  // 무적 상태 종료
     }
 }

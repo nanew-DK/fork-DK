@@ -17,7 +17,7 @@ public class PlayerMove : MonoBehaviour
     private float moveInput = 0f;//플레이어 좌우이동 input
     private bool isFacingRight = true;//좌우 처다보는것
     //플레이어 점프
-    private float jumpingPower = 15f;//점프 높이
+    private float jumpingPower = 25f;//점프 높이
 
     //플레이어 로프 이동
     private HingeJoint2D joint;
@@ -28,7 +28,7 @@ public class PlayerMove : MonoBehaviour
     bool ableRope = false;
 
     //플레이어 대쉬
-    private bool isDash = false;
+    //private bool isDash = false;
     private bool canDash = true;
 
     [Header("Dash Settings")]
@@ -36,7 +36,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float dashCoolTime = 2.0f;//대쉬 쿨타임
     [SerializeField] private float dashSpeed = 20.0f;//대쉬 속도
 
-    
+
     public float dashCooldown = 1f; // 대시 재사용 대기 시간
     private Vector2 dashDirection;
 
@@ -53,30 +53,38 @@ public class PlayerMove : MonoBehaviour
     //최대 체력
     [SerializeField] public float maxHealth;
     //HP 설정
-    public Slider HpBarSlider;
+    private PlayerHP playerHP; // PlayerHP 참조 변수 추가
     Rigidbody2D rigid;
+   
 
     //패링
     bool isparrying = false;
     private float parryingCoolTime = 0.5f;
-    bool successParrying=false;
+    bool successParrying = false;
     float DamageUpTime = 1f;
     public GameObject shield;//임시 모션
 
     private SpriteRenderer spriteRenderer;
+
+    private float originalGravityScale; //대시 중력
+
+    Animator anim;
 
     private void Start()
     {
         joint = GetComponent<HingeJoint2D>();
         spriteRenderer = GetComponent<SpriteRenderer>(); // SpriteRenderer 초기화
         rigid = GetComponent<Rigidbody2D>(); // Rigidbody2D 초기화
+        playerHP = GetComponent<PlayerHP>();
+        originalGravityScale = rigid.gravityScale;
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (Input.GetKey(KeySetting.Keys[KeyAction.LEFT]))
+        if (Input.GetKey(KeySetting.Keys[KeyAction.LEFT]))//기본 좌우 이동
         {
             moveInput = -1f;
         }
@@ -88,29 +96,27 @@ public class PlayerMove : MonoBehaviour
         {
             moveInput = 0f;
         }
-        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.UP]) && IsGrounded())
+
+       
+
+        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.UP]) && IsGrounded())//기본 점프
         {
             rb.velocity += new Vector2(0, jumpingPower);
         }
-        if (Input.GetKey(KeySetting.Keys[KeyAction.UP]) && isOnRope)
-        {
-            if (!ableRope)
-            {
-                StartCoroutine(UpRope());
-            }
-        }
-        if (Input.GetKey(KeySetting.Keys[KeyAction.DOWN]) && isOnRope)
-        {
-            if (!ableRope)
-            {
-                StartCoroutine(DownRope());
-            }
-        }
+        
+        /*
         if (Input.GetKeyUp(KeySetting.Keys[KeyAction.UP]) && rb.velocity.y > 0f)
         {
             //rb.velocity += new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
+<<<<<<< Updated upstream
         }
-        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.DASH]) && Time.time >= lastDashTime + dashCooldown )
+        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.DASH]) && Time.time >= lastDashTime + dashCooldown)
+=======
+        }*/
+
+
+
+        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.DASH]) && Time.time >= lastDashTime + dashCooldown )//대쉬
         {
             //StartCoroutine(dash());
             StartDash();
@@ -119,22 +125,49 @@ public class PlayerMove : MonoBehaviour
         {
             EndDash();
         }
-        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.INTERACTION]) && isOnRope)
+
+
+        if (Input.GetKey(KeySetting.Keys[KeyAction.UP]) && isOnRope)//로프 올라가기
+        {
+            if (!ableRope)
+            {
+                StartCoroutine(UpRope());
+            }
+        }
+        if (Input.GetKey(KeySetting.Keys[KeyAction.DOWN]) && isOnRope)//로프 내려가기
+        {
+            if (!ableRope)
+            {
+                StartCoroutine(DownRope());
+            }
+        }
+        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.INTERACTION]) && isOnRope)//로프 나오기
         {
             isOnRope = false;
             joint.enabled = false;
             //rb.velocity+=new Vector2(rb.velocity.x, rb.velocity.y);
             rb.velocity += rb.velocity.normalized * rb.velocity.magnitude * 1.5f;//1.5f는 반동 계수
+
         }
-        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.PARRYING]) && !isparrying) 
+
+        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.PARRYING]) && !isparrying) //패링
         {
 
             StartCoroutine(Parrying());
         }
 
         Flip();
-    }
 
+        if(rigid.velocity.normalized.x == 0)
+        {
+            anim.SetBool("IsRun", false);
+        }
+        else
+        {
+            anim.SetBool("IsRun", true);
+        }
+
+    }
     private void StartDash()
     {
         isDashing = true;
@@ -154,15 +187,34 @@ public class PlayerMove : MonoBehaviour
         {
             dashDirection = new Vector2(horizontalInput, verticalInput).normalized;
         }
-        rb.velocity = Vector2.zero;
-        rb.velocity += new Vector2( dashDirection.x * dashSpeed*4f,0); // 대시 속도 적용
+
+        rigid.velocity = Vector2.zero;
+        rigid.velocity += new Vector2(dashDirection.x * dashSpeed * 4f, 0); // 대시 속도 적용
+
+        rigid.gravityScale = 0; // 중력 비활성화
+        IgnoreEnemyCollision(true); // Enemy와의 충돌 비활성화
     }
 
     private void EndDash()
     {
         isDashing = false;
-        //rb.velocity = Vector2.zero; // 대시 후 정지
-        rb.velocity -= new Vector2(dashDirection.x * dashSpeed * 3f, 0);
+        rigid.velocity -= new Vector2(dashDirection.x * dashSpeed * 3f, 0); // 대시 종료 시 속도 감소
+        rigid.gravityScale = originalGravityScale; // 원래 중력값 복구
+        IgnoreEnemyCollision(false); // Enemy와의 충돌 활성화
+    }
+
+    private void IgnoreEnemyCollision(bool ignore)
+    {
+        int playerLayer = LayerMask.NameToLayer("Player");
+        int enemyLayer = LayerMask.NameToLayer("Enemy");
+
+        if (playerLayer == -1 || enemyLayer == -1)
+        {
+            Debug.LogError("Layer names 'Player' or 'Enemy' are not defined in the Tags and Layers settings.");
+            return;
+        }
+
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, ignore);
     }
 
     IEnumerator Parrying()
@@ -195,7 +247,7 @@ public class PlayerMove : MonoBehaviour
     }
     IEnumerator UpRope()
     {
-        
+
         if (Rope.FindHead(linkedHinge) != linkedHinge.connectedBody)
         {
             ableRope = true;
@@ -225,7 +277,7 @@ public class PlayerMove : MonoBehaviour
         yield return new WaitForSeconds(ropeCooltime);
         ableRope = false;
     }
-    
+
     private void FixedUpdate()
     {
 
@@ -239,10 +291,9 @@ public class PlayerMove : MonoBehaviour
             if (moveInput != 0)
             {
                 rb.velocity += new Vector2(moveInput * speed / 8, 0);
-                Debug.Log(rb.velocity.x);
             }
         }
-        
+
 
     }
 
@@ -250,6 +301,19 @@ public class PlayerMove : MonoBehaviour
     {
         return Physics2D.OverlapCircle(groundCheck.position, 0.2f, groundLayer);
     }
+
+    /* private void Flip()
+     {
+         if (isFacingRight && moveInput < 0f || !isFacingRight && moveInput > 0f)
+         {
+             isFacingRight = !isFacingRight;
+             Vector3 localScale = transform.localScale;
+             localScale.x *= -1f;
+             transform.localScale = localScale;
+
+         }
+     }
+    */
 
     private void Flip()
     {
@@ -260,8 +324,12 @@ public class PlayerMove : MonoBehaviour
             localScale.x *= -1f;
             transform.localScale = localScale;
 
+            // Flip 상태 변경 시 애니메이션 업데이트
+            anim.SetBool("IsRun", true); // 애니메이션 상태 전환
         }
     }
+
+
 
     private void OnTriggerEnter2D(Collider2D coll)
     {
@@ -284,37 +352,99 @@ public class PlayerMove : MonoBehaviour
     public void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+        if (rigid == null)
+        {
+            Debug.LogError("Rigidbody2D not found on Player!");
+        }
     }
     public void SetUp(float amount)
     {
         maxHealth = amount;
         curHealth = maxHealth;
     }
-   
+
     public void OnDamaged(Vector2 targetPos)
     {
-        gameObject.layer = LayerMask.NameToLayer("PlayerDamaged"); // 무적 레이어
-        
-        spriteRenderer.color = new Color(1, 1, 1, 0.3f);
-      
-        int dirc = transform.position.x - targetPos.x > 0 ? 1 : -1; //넉백
-        rigid.AddForce(new Vector2(dirc, 2) * 5, ForceMode2D.Impulse);
+        if (gameObject.layer == LayerMask.NameToLayer("PlayerDamaged"))
+        {
+            // 이미 무적 상태인 경우 처리하지 않음
+            return;
+        }
 
-        Invoke("OffDamaged", 0.5f); //무적해제
+        gameObject.layer = LayerMask.NameToLayer("PlayerDamaged"); // 무적 레이어 설정
+        spriteRenderer.color = new Color(1, 1, 1, 0.3f); // 무적 상태 시 투명도 변경
+
+        int dirc = transform.position.x - targetPos.x > 0 ? 1 : -1; // 넉백 방향 결정
+        rigid.AddForce(new Vector2(dirc, 2) * 5, ForceMode2D.Impulse); // 넉백 적용
+
+        StartCoroutine(HandleTemporaryInvincibility(1.5f)); // 무적 상태 관리 코루틴 호출
     }
+
     void OffDamaged()
     {
-        //무적판정 풀림
-        gameObject.layer = LayerMask.NameToLayer("Player"); ; // 무적 레이어 해제
-        spriteRenderer.color = new Color(1, 1, 1, 1);
+        gameObject.layer = LayerMask.NameToLayer("Player"); // 무적 레이어 해제
+        spriteRenderer.color = new Color(1, 1, 1, 1); // 원래 상태로 복구
     }
+
+    IEnumerator HandleTemporaryInvincibility(float duration)
+    {
+        int playerLayer = LayerMask.NameToLayer("PlayerDamaged");
+        int enemyLayer = LayerMask.NameToLayer("Enemy");
+
+        if (playerLayer == -1 || enemyLayer == -1)
+        {
+            Debug.LogError("Layer names 'PlayerDamaged' or 'Enemy' are not defined in the Tags and Layers settings.");
+            yield break;
+        }
+
+        // 충돌을 무시하도록 설정
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, true);
+
+        // 무적 타이머
+        yield return new WaitForSeconds(duration);
+
+        // 충돌 다시 활성화
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false);
+
+        OffDamaged(); // 무적 해제
+    }
+
+
+    IEnumerator TemporarilyIgnoreEnemyCollision(float duration)
+    {
+        int playerLayer = LayerMask.NameToLayer("Player");
+        int enemyLayer = LayerMask.NameToLayer("Enemy");
+
+        if (playerLayer == -1 || enemyLayer == -1)
+        {
+            Debug.LogError("Layer names 'Player' or 'Enemy' are not defined in the Tags and Layers settings.");
+            yield break;
+        }
+
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, true); // 플레이어와 적의 충돌 무시
+        yield return new WaitForSeconds(duration);
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false); // 충돌 복구
+    }
+
+
+
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // 대시 중 벽에 충돌하면 대시 종료
         if (isDashing)
         {
             EndDash();
+        }
+
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Vector2 targetPos = collision.transform.position;
+
+            // 넉백 먼저 적용
+            OnDamaged(targetPos);
+
+            // PlayerHP의 TakeDamage 호출
+            playerHP.TakeDamage(1, targetPos); // 대미지 처리 및 넉백 적용
         }
     }
 
