@@ -10,16 +10,22 @@ public class Sword : MonoBehaviour
     public GameObject strike3;
 
     private int whatSwordAttack = 0;
-    private SwordStrike swordScript;
-    private Vector3 strikeDirection;
+    private Animator anim;
+
+    private void Start()
+    {
+        anim = player.GetComponent<Animator>();  // 플레이어 애니메이터 가져오기
+    }
+
     public void doSwordAttack()
     {
+        anim.SetTrigger("IsAttack");  // 애니메이션 트리거 설정
+
         if (whatSwordAttack == 0)
         {
             firstSword();
             whatSwordAttack++;
             StartCoroutine("whatAttack1");
-
         }
         else if (whatSwordAttack == 1)
         {
@@ -34,55 +40,44 @@ public class Sword : MonoBehaviour
             whatSwordAttack = 0;
         }
     }
+
     private IEnumerator whatAttack1()
     {
         yield return new WaitForSeconds(1.5f);
         whatSwordAttack = 0;
     }
+
     private IEnumerator whatAttack2()
     {
         yield return new WaitForSeconds(1.5f);
         whatSwordAttack = 0;
     }
+
     private void firstSword()
     {
         Debug.Log("첫번째");
         GameObject a = Instantiate(strike1, transform.position, transform.rotation);
         Destroy(a, 1f);
-        if (player.transform.position.x < this.transform.position.x)
-        {
-            player.transform.position += transform.right * 1f;
-            a.transform.rotation = Quaternion.Euler(0, 0, -90f);
-        }
-        else
-        {
-            player.transform.position += -transform.right * 1f;
-            a.transform.rotation = Quaternion.Euler(0, 0, 90f);
-        }
+        AdjustPlayerPositionAndRotation(a, -90f, 90f);
     }
+
     private void secondSword()
     {
         Debug.Log("두번째");
-        
         if (player.transform.position.x < this.transform.position.x)
         {
-            this.transform.position += transform.right * 3f;
-            GameObject b = Instantiate(strike2, transform.position, transform.rotation);
-            Destroy(b, 1f);
-            this.transform.position -= transform.right * 3f;
-            player.transform.position += transform.right * 3f;
-            b.transform.rotation = Quaternion.Euler(0, 0, -90f);
+            transform.position += transform.right * 3f;
         }
         else
         {
-            this.transform.position -= transform.right * 3f;
-            GameObject b = Instantiate(strike2, transform.position, transform.rotation);
-            Destroy(b, 1f);
-            this.transform.position += transform.right * 3f;
-            player.transform.position += -transform.right * 3f;
-            b.transform.rotation = Quaternion.Euler(0, 0, 90f);
+            transform.position -= transform.right * 3f;
         }
+
+        GameObject b = Instantiate(strike2, transform.position, transform.rotation);
+        Destroy(b, 1f);
+        AdjustPlayerPositionAndRotation(b, -90f, 90f);
     }
+
     private void thirdSword()
     {
         Debug.Log("세번째");
@@ -90,4 +85,23 @@ public class Sword : MonoBehaviour
         Destroy(c, 1f);
         player.transform.position += transform.up * 2f;
     }
+
+    private void AdjustPlayerPositionAndRotation(GameObject obj, float leftAngle, float rightAngle)
+    {
+        if (player.transform.position.x < this.transform.position.x)
+        {
+            player.transform.position += transform.right * 1f;
+            obj.transform.rotation = Quaternion.Euler(0, 0, leftAngle);
+        }
+        else
+        {
+            player.transform.position += -transform.right * 1f;
+            obj.transform.rotation = Quaternion.Euler(0, 0, rightAngle);
+        }
+    }
+public void ResetAttack()
+    {
+        anim.ResetTrigger("IsAttack");
+    }
+
 }

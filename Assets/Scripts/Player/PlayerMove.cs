@@ -102,8 +102,30 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKeyDown(KeySetting.Keys[KeyAction.UP]) && IsGrounded())//기본 점프
         {
             rb.velocity += new Vector2(0, jumpingPower);
+            anim.SetTrigger("JumpStart"); // 트리거 사용
         }
-        
+
+        float yVelocity = rb.velocity.y;
+        anim.SetFloat("yVelocity", yVelocity);
+
+        if (!IsGrounded()) // 공중에 있는 동안
+        {
+            if (yVelocity > 0.1f)
+            {
+                anim.SetBool("IsJump", true); // 점프 중
+            }
+            else if (yVelocity < -0.1f)
+            {
+                anim.SetBool("IsFalling", true); // 낙하 중
+            }
+        }
+        else // 착지 시
+        {
+            anim.SetBool("IsJump", false);
+            anim.SetBool("IsFalling", false);
+            anim.SetTrigger("JumpOver"); // 착지 애니메이션
+        }
+
         /*
         if (Input.GetKeyUp(KeySetting.Keys[KeyAction.UP]) && rb.velocity.y > 0f)
         {

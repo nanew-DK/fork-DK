@@ -559,6 +559,7 @@ GameObject:
   - component: {fileID: 873718575}
   - component: {fileID: 873718574}
   - component: {fileID: 873718573}
+  - component: {fileID: 873718580}
   m_Layer: 11
   m_Name: Player
   m_TagString: Player
@@ -595,8 +596,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6e7b43a68f2fde4dbfa9e96afda712b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HpBarSlider: {fileID: 0}
+  heartPrefab: {fileID: 0}
   maxHP: 100
+  currentHP: 5
+  heartObjects: []
+  invincibilityDuration: 1
 --- !u!114 &873718575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,6 +618,7 @@ MonoBehaviour:
   dashDuration: 0.2
   dashCoolTime: 2
   dashSpeed: 5
+  dashCooldown: 1
   rb: {fileID: 873718577}
   groundCheck: {fileID: 977208904}
   groundLayer:
@@ -621,7 +626,7 @@ MonoBehaviour:
     m_Bits: 64
   curHealth: 0
   maxHealth: 0
-  HpBarSlider: {fileID: 0}
+  shield: {fileID: 0}
 --- !u!61 &873718576
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -764,6 +769,19 @@ Transform:
   - {fileID: 679850760}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &873718580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 873718572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5382cc9f77d0fdc4ea58d06f51275fad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keyPanel: {fileID: 0}
 --- !u!1 &977208903
 GameObject:
   m_ObjectHideFlags: 0
@@ -829,10 +847,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigid: {fileID: 1908175520}
   render: {fileID: 1908175521}
+  boxCollider: {fileID: 0}
   speed: 2.5
   followDistance: 5
   stopChaseRange: 2
   Hp: 0
+  knockbackForce: 10
 --- !u!61 &1908175519
 BoxCollider2D:
   m_ObjectHideFlags: 0
