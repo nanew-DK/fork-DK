@@ -100,12 +100,12 @@ TextureImporter:
       name: Jump Over_0
       rect:
         serializedVersion: 2
-        x: 530
-        y: 364
-        width: 740
-        height: 1320
+        x: 526
+        y: 491
+        width: 655
+        height: 1189
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -121,12 +121,12 @@ TextureImporter:
       name: Jump Over_1
       rect:
         serializedVersion: 2
-        x: 2491
-        y: 364
-        width: 740
-        height: 1320
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 2495
+        y: 368
+        width: 641
+        height: 1027
+      alignment: 9
+      pivot: {x: 0.5037021, y: 0.62706643}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -142,12 +142,12 @@ TextureImporter:
       name: Jump Over_2
       rect:
         serializedVersion: 2
-        x: 4413
-        y: 364
-        width: 740
-        height: 1320
+        x: 4414
+        y: 368
+        width: 642
+        height: 1027
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

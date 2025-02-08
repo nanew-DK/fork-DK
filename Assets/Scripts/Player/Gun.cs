@@ -28,7 +28,6 @@ public class Gun : MonoBehaviour
             bulletDirection = transform.right;
         }
 
-        
         GameObject cpy_bullet = Instantiate(bullet, transform.position, transform.rotation);
 
         // 생성된 총알 스크립트에서 방향 설정

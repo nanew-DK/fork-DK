@@ -12,71 +12,62 @@ using UnityEngine.UI;
 
 public class PlayerMove : MonoBehaviour
 {
-    //ÇÃ·¹ÀÌ¾î ÁÂ¿ì ÀÌµ¿
-    [SerializeField] private float speed = 2f;//ÇÃ·¹ÀÌ¾î ½ºÇÇµå
-    private float moveInput = 0f;//ÇÃ·¹ÀÌ¾î ÁÂ¿ìÀÌµ¿ input
-    private bool isFacingRight = true;//ÁÂ¿ì Ã³´Ùº¸´Â°Í
-    //ÇÃ·¹ÀÌ¾î Á¡ÇÁ
-    private float jumpingPower = 25f;//Á¡ÇÁ ³ôÀÌ
+    [Header("ê¸°ë³¸ ì´ë™ ê´€ë ¨ ë³€ìˆ˜")]
+    [SerializeField] private float speed = 2f;        // í”Œë ˆì´ì–´ ì´ë™ ì†ë„
+    private float moveInput = 0f;                     // ì¢Œìš° ì´ë™ ì…ë ¥ê°’
+    private bool isFacingRight = true;                // ìºë¦­í„°ê°€ ì˜¤ë¥¸ìª½ì„ ë³´ê³  ìˆëŠ”ì§€ ì—¬ë¶€
+    private float jumpingPower = 25f;                 // ì í”„ë ¥
 
-    //ÇÃ·¹ÀÌ¾î ·ÎÇÁ ÀÌµ¿
-    private HingeJoint2D joint;
-    private bool isOnRope = false;
-    HingeJoint2D linkedHinge;
-    [SerializeField] private float ropeForce = 15f;
-    float ropeCooltime = 0.1f;
-    bool ableRope = false;
+    [Header("ë¡œí”„ ê´€ë ¨ ë³€ìˆ˜")]
+    private HingeJoint2D joint;                       // ë¡œí”„ì— ë§¤ë‹¬ë¦¬ê¸° ìœ„í•œ ì¡°ì¸íŠ¸
+    private bool isOnRope = false;                    // ë¡œí”„ì— ë§¤ë‹¬ë ¤ìˆëŠ”ì§€ ì—¬ë¶€
+    HingeJoint2D linkedHinge;                         // ì—°ê²°ëœ ë¡œí”„ì˜ íŒì§€ ì¡°ì¸íŠ¸
+    [SerializeField] private float ropeForce = 15f;   // ë¡œí”„ì—ì„œ ì›€ì§ì¼ ë•Œ ê°€í•´ì§€ëŠ” í˜
+    float ropeCooltime = 0.1f;                        // ë¡œí”„ ë™ì‘ ì¿¨íƒ€ì„
+    bool ableRope = false;                            // ë¡œí”„ ì‚¬ìš© ê°€ëŠ¥ ì—¬ë¶€
 
-    //ÇÃ·¹ÀÌ¾î ´ë½¬
-    //private bool isDash = false;
-    private bool canDash = true;
+    [Header("ëŒ€ì‹œ ê´€ë ¨ ë³€ìˆ˜")]
+    private bool canDash = true;                      // ëŒ€ì‹œ ê°€ëŠ¥ ì—¬ë¶€
+    [SerializeField] private float dashDuration = 0.2f;// ëŒ€ì‹œ ì§€ì†ì‹œê°„
+    [SerializeField] private float dashCoolTime = 2.0f;// ëŒ€ì‹œ ì¿¨íƒ€ì„
+    [SerializeField] private float dashSpeed = 20.0f;  // ëŒ€ì‹œ ì†ë„
+    public float dashCooldown = 1f;                   // ëŒ€ì‹œ ì¿¨ë‹¤ìš´ ì‹œê°„
+    private Vector2 dashDirection;                     // ëŒ€ì‹œ ë°©í–¥
+    private bool isDashing = false;                    // í˜„ì¬ ëŒ€ì‹œ ì¤‘ì¸ì§€ ì—¬ë¶€
+    private float dashTime;                           // ëŒ€ì‹œ íƒ€ì´ë¨¸
+    private float lastDashTime;                       // ë§ˆì§€ë§‰ ëŒ€ì‹œ ì‹œê°„
 
-    [Header("Dash Settings")]
-    [SerializeField] private float dashDuration = 0.2f;//´ë½¬ Áö¼Ó½Ã°£
-    [SerializeField] private float dashCoolTime = 2.0f;//´ë½¬ ÄğÅ¸ÀÓ
-    [SerializeField] private float dashSpeed = 20.0f;//´ë½¬ ¼Óµµ
+    [Header("ê¸°íƒ€ ì»´í¬ë„ŒíŠ¸")]
+    [SerializeField] private Rigidbody2D rb;          // ë¦¬ì§€ë“œë°”ë”” ì»´í¬ë„ŒíŠ¸
+    [SerializeField] private Transform groundCheck;    // ì§€ë©´ ì²´í¬ ìœ„ì¹˜
+    [SerializeField] private LayerMask groundLayer;    // ì§€ë©´ ë ˆì´ì–´
 
+    [Header("ì²´ë ¥ ê´€ë ¨ ë³€ìˆ˜")]
+    [SerializeField] private float curHealth;          // í˜„ì¬ ì²´ë ¥
+    [SerializeField] public float maxHealth;           // ìµœëŒ€ ì²´ë ¥
+    private PlayerHP playerHP;                         // PlayerHP ìŠ¤í¬ë¦½íŠ¸ ì°¸ì¡°
 
-    public float dashCooldown = 1f; // ´ë½Ã Àç»ç¿ë ´ë±â ½Ã°£
-    private Vector2 dashDirection;
-
-    private bool isDashing = false;
-    private float dashTime;
-    private float lastDashTime;
-    //±×¿Ü
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] private Transform groundCheck;
-    [SerializeField] private LayerMask groundLayer;
-
-    //ÇöÀç Ã¼·Â
-    [SerializeField] private float curHealth;
-    //ÃÖ´ë Ã¼·Â
-    [SerializeField] public float maxHealth;
-    //HP ¼³Á¤
-    private PlayerHP playerHP; // PlayerHP ÂüÁ¶ º¯¼ö Ãß°¡
-    Rigidbody2D rigid;
-   
-
-    //ÆĞ¸µ
-    bool isparrying = false;
-    private float parryingCoolTime = 0.5f;
-    bool successParrying = false;
-    float DamageUpTime = 1f;
-    public GameObject shield;//ÀÓ½Ã ¸ğ¼Ç
+    [Header("íŒ¨ë§ ê´€ë ¨ ë³€ìˆ˜")]
+    bool isparrying = false;                          // íŒ¨ë§ ì¤‘ì¸ì§€ ì—¬ë¶€
+    private float parryingCoolTime = 0.5f;            // íŒ¨ë§ ì¿¨íƒ€ì„
+    bool successParrying = false;                     // íŒ¨ë§ ì„±ê³µ ì—¬ë¶€
+    float DamageUpTime = 1f;                         // íŒ¨ë§ ì„±ê³µ í›„ ë°ë¯¸ì§€ ì¦ê°€ ì‹œê°„
+    public GameObject shield;                         // ë°©íŒ¨ ì˜¤ë¸Œì íŠ¸
 
     private SpriteRenderer spriteRenderer;
 
-    private float originalGravityScale; //´ë½Ã Áß·Â
+    private float originalGravityScale; // ì›ë˜ ì¤‘ë ¥ ìŠ¤ì¼€ì¼
 
-    Animator anim;
+    public Animator anim;
 
     private void Start()
     {
+        // ì»´í¬ë„ŒíŠ¸ ì´ˆê¸°í™”
         joint = GetComponent<HingeJoint2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>(); // SpriteRenderer ÃÊ±âÈ­
-        rigid = GetComponent<Rigidbody2D>(); // Rigidbody2D ÃÊ±âÈ­
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
         playerHP = GetComponent<PlayerHP>();
-        originalGravityScale = rigid.gravityScale;
+        originalGravityScale = rb.gravityScale;
         anim = GetComponent<Animator>();
     }
 
@@ -84,7 +75,7 @@ public class PlayerMove : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKey(KeySetting.Keys[KeyAction.LEFT]))//±âº» ÁÂ¿ì ÀÌµ¿
+        if (Input.GetKey(KeySetting.Keys[KeyAction.LEFT]))//ê¸°ë³¸ ì í”„
         {
             moveInput = -1f;
         }
@@ -97,48 +88,48 @@ public class PlayerMove : MonoBehaviour
             moveInput = 0f;
         }
 
-       
 
-        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.UP]) && IsGrounded())//±âº» Á¡ÇÁ
+
+        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.UP]) && IsGrounded())//ê¸°ë³¸ ì í”„
         {
             rb.velocity += new Vector2(0, jumpingPower);
-            anim.SetTrigger("JumpStart"); // Æ®¸®°Å »ç¿ë
+            anim.SetBool("IsJump", true);
+            anim.SetBool("IsGrounded", false);
+            anim.SetTrigger("JumpStart");
         }
 
         float yVelocity = rb.velocity.y;
         anim.SetFloat("yVelocity", yVelocity);
 
-        if (!IsGrounded()) // °øÁß¿¡ ÀÖ´Â µ¿¾È
+        if (!IsGrounded()) // ê³µì¤‘ì— ìˆëŠ” ìƒíƒœ
         {
+            anim.SetBool("IsGrounded", false);
             if (yVelocity > 0.1f)
             {
-                anim.SetBool("IsJump", true); // Á¡ÇÁ Áß
+                anim.SetBool("IsJump", true);
             }
             else if (yVelocity < -0.1f)
             {
-                anim.SetBool("IsFalling", true); // ³«ÇÏ Áß
+                anim.SetBool("IsJump", false);
             }
         }
-        else // ÂøÁö ½Ã
+        else // ì°©ì§€ ì‹œ
         {
+            anim.SetBool("IsGrounded", true);
             anim.SetBool("IsJump", false);
-            anim.SetBool("IsFalling", false);
-            anim.SetTrigger("JumpOver"); // ÂøÁö ¾Ö´Ï¸ŞÀÌ¼Ç
         }
 
         /*
         if (Input.GetKeyUp(KeySetting.Keys[KeyAction.UP]) && rb.velocity.y > 0f)
         {
             //rb.velocity += new Vector2(rb.velocity.x, rb.velocity.y * 0.5f);
-<<<<<<< Updated upstream
         }
         if (Input.GetKeyDown(KeySetting.Keys[KeyAction.DASH]) && Time.time >= lastDashTime + dashCooldown)
-=======
-        }*/
+        */
 
 
 
-        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.DASH]) && Time.time >= lastDashTime + dashCooldown )//´ë½¬
+        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.DASH]) && Time.time >= lastDashTime + dashCooldown)//ëŒ€ì‹œ
         {
             //StartCoroutine(dash());
             StartDash();
@@ -149,30 +140,32 @@ public class PlayerMove : MonoBehaviour
         }
 
 
-        if (Input.GetKey(KeySetting.Keys[KeyAction.UP]) && isOnRope)//·ÎÇÁ ¿Ã¶ó°¡±â
+        if (Input.GetKey(KeySetting.Keys[KeyAction.UP]) && isOnRope)//ë¡œí”„ ì˜¤ë²„
         {
             if (!ableRope)
             {
                 StartCoroutine(UpRope());
             }
         }
-        if (Input.GetKey(KeySetting.Keys[KeyAction.DOWN]) && isOnRope)//·ÎÇÁ ³»·Á°¡±â
+        if (Input.GetKey(KeySetting.Keys[KeyAction.DOWN]) && isOnRope)//ë¡œí”„ ì•„ë˜ë¡œ ì´ë™
         {
             if (!ableRope)
             {
                 StartCoroutine(DownRope());
             }
         }
-        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.INTERACTION]) && isOnRope)//·ÎÇÁ ³ª¿À±â
+        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.INTERACTION]) && isOnRope)//ë¡œí”„ ëŠê¸°
         {
             isOnRope = false;
+            anim.SetBool("isSwing", false);
+
             joint.enabled = false;
             //rb.velocity+=new Vector2(rb.velocity.x, rb.velocity.y);
-            rb.velocity += rb.velocity.normalized * rb.velocity.magnitude * 1.5f;//1.5f´Â ¹İµ¿ °è¼ö
+            rb.velocity += rb.velocity.normalized * rb.velocity.magnitude * 1.5f;//1.5fë¥¼ ê³±í•´ì„œ ë” ë©€ë¦¬ ë³´ë‚´ê¸°
 
         }
 
-        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.PARRYING]) && !isparrying) //ÆĞ¸µ
+        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.PARRYING]) && !isparrying) //íŒ¨ë§
         {
 
             StartCoroutine(Parrying());
@@ -180,7 +173,7 @@ public class PlayerMove : MonoBehaviour
 
         Flip();
 
-        if(rigid.velocity.normalized.x == 0)
+        if (rb.velocity.normalized.x == 0)
         {
             anim.SetBool("IsRun", false);
         }
@@ -192,17 +185,18 @@ public class PlayerMove : MonoBehaviour
     }
     private void StartDash()
     {
+        // ëŒ€ì‹œ ì‹œì‘ ì‹œ ì„¤ì •
         isDashing = true;
         dashTime = Time.time + dashDuration;
         lastDashTime = Time.time;
 
-        // ´ë½Ã ¹æÇâ ¼³Á¤ (ÇöÀç ÀÌµ¿ ¹æÇâ ±âÁØ)
+        // ëŒ€ì‹œ ë°©í–¥ ê²°ì • (ì…ë ¥ ë°©í–¥ ê¸°ì¤€)
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
 
         if (horizontalInput == 0 && verticalInput == 0)
         {
-            // ´ë½Ã ¹æÇâÀÌ ¾øÀ¸¸é ¸¶Áö¸· ÀÌµ¿ ¹æÇâÀ¸·Î ¼³Á¤
+            // ëŒ€ì‹œ ë°©í–¥ì´ ê²°ì •ë˜ì§€ ì•Šì•˜ì„ ë•Œ ê¸°ë³¸ ë°©í–¥ìœ¼ë¡œ ì„¤ì •
             dashDirection = transform.localScale.x > 0 ? Vector2.right : Vector2.left;
         }
         else
@@ -210,19 +204,19 @@ public class PlayerMove : MonoBehaviour
             dashDirection = new Vector2(horizontalInput, verticalInput).normalized;
         }
 
-        rigid.velocity = Vector2.zero;
-        rigid.velocity += new Vector2(dashDirection.x * dashSpeed * 4f, 0); // ´ë½Ã ¼Óµµ Àû¿ë
+        rb.velocity = Vector2.zero;
+        rb.velocity += new Vector2(dashDirection.x * dashSpeed * 4f, 0); // ëŒ€ì‹œ ì†ë„ ì ìš©
 
-        rigid.gravityScale = 0; // Áß·Â ºñÈ°¼ºÈ­
-        IgnoreEnemyCollision(true); // Enemy¿ÍÀÇ Ãæµ¹ ºñÈ°¼ºÈ­
+        rb.gravityScale = 0; // ì¤‘ë ¥ ë¬´ì‹œ
+        IgnoreEnemyCollision(true); // Enemy ì¶©ëŒ ë¬´ì‹œ
     }
 
     private void EndDash()
     {
         isDashing = false;
-        rigid.velocity -= new Vector2(dashDirection.x * dashSpeed * 3f, 0); // ´ë½Ã Á¾·á ½Ã ¼Óµµ °¨¼Ò
-        rigid.gravityScale = originalGravityScale; // ¿ø·¡ Áß·Â°ª º¹±¸
-        IgnoreEnemyCollision(false); // Enemy¿ÍÀÇ Ãæµ¹ È°¼ºÈ­
+        rb.velocity -= new Vector2(dashDirection.x * dashSpeed * 3f, 0); // ëŒ€ì‹œ ëë‚  ë•Œ ì†ë„ ì¤„ì´ê¸°
+        rb.gravityScale = originalGravityScale; // ì›ë˜ ì¤‘ë ¥ ìŠ¤ì¼€ì¼ë¡œ ë³µê·€
+        IgnoreEnemyCollision(false); // Enemy ì¶©ëŒ ë³µê·€
     }
 
     private void IgnoreEnemyCollision(bool ignore)
@@ -242,8 +236,8 @@ public class PlayerMove : MonoBehaviour
     IEnumerator Parrying()
     {
         isparrying = true;
-        //ÀÏÁ¤ ½Ã°£µ¿¾È ÆĞ¸µ trueÀÎ »óÈ²¿¡¼­ PlayerHp¿¡ ÀÖ´ÂTakeDamageÇÔ¼ö°¡ ½ÇÇàµÈ´Ù¸é
-        //isparryingÀÌ false·Î ¹Ù²î°í °ø°İ·ÂÀ» 1.5ÃÊ°£ ¿Ã¸²
+        //íŒ¨ë§ ì§€ì† ì¤‘ì¸ì§€ í™•ì¸í•˜ê³  PlayerHpì— TakeDamage ìŠ¤í¬ë¦½íŠ¸ê°€ ìˆëŠ”ì§€ í™•ì¸
+        //isparryingì´ falseê°€ ë˜ë©´ 1.5ì´ˆ í›„ ë‹¤ì‹œ í™•ì¸
         shield.SetActive(true);
         yield return new WaitForSeconds(parryingCoolTime);
         shield.SetActive(false);
@@ -259,7 +253,7 @@ public class PlayerMove : MonoBehaviour
     }
     public IEnumerator ParryingSuccess()
     {
-        Debug.Log("ÆĞ¸µ ¼º°ø");
+        Debug.Log("íŒ¨ë§ ì„±ê³µ");
         successParrying = true;
         shield.SetActive(false);
         isparrying = false;
@@ -274,13 +268,13 @@ public class PlayerMove : MonoBehaviour
         {
             ableRope = true;
             Rigidbody2D connectedRigidbody = linkedHinge.connectedBody;
-            //ÇöÀç ¿¬°áµÇ¾îÀÖ´Â ¿ÀºêÁ§Æ®(1)¿¡¼­ ¿ÀºêÁ§Æ®(1)À» Àâ°íÀÖ´Â ¿ÀºêÁ§Æ®(2)¸¦ ±¸ÇÔ
-            joint.connectedBody = connectedRigidbody;//¿ÀºêÁ§Æ®(2)¿¡ ÇÃ·¹ÀÌ¾î¸¦ ¿¬°á
+            //ë¡œí”„ ì—°ê²°ëœ ì¡°ì¸íŠ¸(1)ë¥¼ ë¡œí”„ ì—°ê²°ëœ ì¡°ì¸íŠ¸(2)ì— ì—°ê²°
+            joint.connectedBody = connectedRigidbody;//ë¡œí”„ ì—°ê²°ëœ ì¡°ì¸íŠ¸(2)ë¥¼ í”Œë ˆì´ì–´ì— ì—°ê²°
 
-            joint.anchor = new Vector2(0, 0.5f);//ÇÃ·¹ÀÌ¾îÀÇ anchor¸¦ ¿ÀºêÁ§Æ®ÀÇ ¾Æ·§ºÎºĞÀ¸·Î ¿¬°á
+            joint.anchor = new Vector2(0, 0.5f);//í”Œë ˆì´ì–´ì˜ anchorë¥¼ ë¡œí”„ ì—°ê²°ëœ ì¡°ì¸íŠ¸ì— ì—°ê²°
             joint.connectedAnchor = new Vector2(0, -0.5f);
             linkedHinge = connectedRigidbody.GetComponent<HingeJoint2D>();
-            //ÇöÀç ¿¬°á µÈ ¿ÀºêÁ§Æ®(2)¸¦ ¿ÀºêÁ§Æ®(1)ÀÌ ÀÖ´ø º¯¼ö¿¡ µ¤¾î¾º¿ò
+            //ë¡œí”„ ì—°ê²°ëœ ì¡°ì¸íŠ¸(2)ë¥¼ ë¡œí”„ ì—°ê²°ëœ ì¡°ì¸íŠ¸(1)ì— ì—°ê²°
         }
         yield return new WaitForSeconds(ropeCooltime);
         ableRope = false;
@@ -289,13 +283,13 @@ public class PlayerMove : MonoBehaviour
     {
         ableRope = true;
         Rigidbody2D connectedRigidbody = Rope.FindBefore(linkedHinge);
-        //¿¬°áµÇ¾îÀÖ´Â ¿ÀºêÁ§Æ®(1)ÀÌ Àâ°íÀÖ´Â ¿ÀºêÁ§Æ®(0)¸¦ ±¸ÇÔ
-        joint.connectedBody = connectedRigidbody;//¿ÀºêÁ§Æ®(0)¿¡ ÇÃ·¹ÀÌ¾î¸¦ ¿¬°á
+        //ë¡œí”„ ì—°ê²°ëœ ì¡°ì¸íŠ¸(1)ë¥¼ ë¡œí”„ ì—°ê²°ëœ ì¡°ì¸íŠ¸(0)ì— ì—°ê²°
+        joint.connectedBody = connectedRigidbody;//ë¡œí”„ ì—°ê²°ëœ ì¡°ì¸íŠ¸(0)ë¥¼ í”Œë ˆì´ì–´ì— ì—°ê²°
 
-        joint.anchor = new Vector2(0, 0.5f);//ÇÃ·¹ÀÌ¾îÀÇ anchor¸¦ ¿ÀºêÁ§Æ®ÀÇ ¾Æ·§ºÎºĞÀ¸·Î ¿¬°á
+        joint.anchor = new Vector2(0, 0.5f);//í”Œë ˆì´ì–´ì˜ anchorë¥¼ ë¡œí”„ ì—°ê²°ëœ ì¡°ì¸íŠ¸ì— ì—°ê²°
         joint.connectedAnchor = new Vector2(0, -0.5f);
         linkedHinge = connectedRigidbody.GetComponent<HingeJoint2D>();
-        //ÇöÀç ¿¬°á µÈ ¿ÀºêÁ§Æ®(0)¸¦ ¿ÀºêÁ§Æ®(1)ÀÌ ÀÖ´ø º¯¼ö¿¡ µ¤¾î¾º¿ò
+        //ë¡œí”„ ì—°ê²°ëœ ì¡°ì¸íŠ¸(0)ë¥¼ ë¡œí”„ ì—°ê²°ëœ ì¡°ì¸íŠ¸(1)ì— ì—°ê²°
         yield return new WaitForSeconds(ropeCooltime);
         ableRope = false;
     }
@@ -346,8 +340,8 @@ public class PlayerMove : MonoBehaviour
             localScale.x *= -1f;
             transform.localScale = localScale;
 
-            // Flip »óÅÂ º¯°æ ½Ã ¾Ö´Ï¸ŞÀÌ¼Ç ¾÷µ¥ÀÌÆ®
-            anim.SetBool("IsRun", true); // ¾Ö´Ï¸ŞÀÌ¼Ç »óÅÂ ÀüÈ¯
+            // Flip ì• ë‹ˆë©”ì´ì…˜ì„ ì¬ìƒí•˜ê³  ë¡œí”„ ì• ë‹ˆë©”ì´ì…˜ì„ ì¤‘ì§€
+            anim.SetBool("IsRun", true); // ë¡œí”„ ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
         }
     }
 
@@ -367,14 +361,14 @@ public class PlayerMove : MonoBehaviour
             isOnRope = true;
             linkedHinge = coll.GetComponent<HingeJoint2D>();
 
-
+            anim.SetBool("isSwing", true);
         }
     }
 
     public void Awake()
     {
-        rigid = GetComponent<Rigidbody2D>();
-        if (rigid == null)
+        rb = GetComponent<Rigidbody2D>();
+        if (rb == null)
         {
             Debug.LogError("Rigidbody2D not found on Player!");
         }
@@ -389,23 +383,23 @@ public class PlayerMove : MonoBehaviour
     {
         if (gameObject.layer == LayerMask.NameToLayer("PlayerDamaged"))
         {
-            // ÀÌ¹Ì ¹«Àû »óÅÂÀÎ °æ¿ì Ã³¸®ÇÏÁö ¾ÊÀ½
+            // ì´ë¯¸ ì²˜ë¦¬ëœ ì¶©ëŒì€ ë¬´ì‹œ
             return;
         }
 
-        gameObject.layer = LayerMask.NameToLayer("PlayerDamaged"); // ¹«Àû ·¹ÀÌ¾î ¼³Á¤
-        spriteRenderer.color = new Color(1, 1, 1, 0.3f); // ¹«Àû »óÅÂ ½Ã Åõ¸íµµ º¯°æ
+        gameObject.layer = LayerMask.NameToLayer("PlayerDamaged"); // í”Œë ˆì´ì–´ ë ˆì´ì–´ ë³€ê²½
+        spriteRenderer.color = new Color(1, 1, 1, 0.3f); // í”Œë ˆì´ì–´ ìƒ‰ìƒ ë³€ê²½
 
-        int dirc = transform.position.x - targetPos.x > 0 ? 1 : -1; // ³Ë¹é ¹æÇâ °áÁ¤
-        rigid.AddForce(new Vector2(dirc, 2) * 5, ForceMode2D.Impulse); // ³Ë¹é Àû¿ë
+        int dirc = transform.position.x - targetPos.x > 0 ? 1 : -1; // í”Œë ˆì´ì–´ ë°©í–¥ ê²°ì •
+        rb.AddForce(new Vector2(dirc, 2) * 5, ForceMode2D.Impulse); // í”Œë ˆì´ì–´ í˜ ê°€í•˜ê¸°
 
-        StartCoroutine(HandleTemporaryInvincibility(1.5f)); // ¹«Àû »óÅÂ °ü¸® ÄÚ·çÆ¾ È£Ãâ
+        StartCoroutine(HandleTemporaryInvincibility(1.5f)); // ì„ì‹œ ë¬´ì  ì§€ì†
     }
 
     void OffDamaged()
     {
-        gameObject.layer = LayerMask.NameToLayer("Player"); // ¹«Àû ·¹ÀÌ¾î ÇØÁ¦
-        spriteRenderer.color = new Color(1, 1, 1, 1); // ¿ø·¡ »óÅÂ·Î º¹±¸
+        gameObject.layer = LayerMask.NameToLayer("Player"); // í”Œë ˆì´ì–´ ë ˆì´ì–´ ë³µê·€
+        spriteRenderer.color = new Color(1, 1, 1, 1); // í”Œë ˆì´ì–´ ìƒ‰ìƒ ë³µê·€
     }
 
     IEnumerator HandleTemporaryInvincibility(float duration)
@@ -419,16 +413,16 @@ public class PlayerMove : MonoBehaviour
             yield break;
         }
 
-        // Ãæµ¹À» ¹«½ÃÇÏµµ·Ï ¼³Á¤
+        // ì¶©ëŒ ë¬´ì‹œ ì„¤ì •
         Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, true);
 
-        // ¹«Àû Å¸ÀÌ¸Ó
+        // ì¶©ëŒ ë¬´ì‹œ ì§€ì†
         yield return new WaitForSeconds(duration);
 
-        // Ãæµ¹ ´Ù½Ã È°¼ºÈ­
+        // ì¶©ëŒ ë¬´ì‹œ ë³µê·€
         Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false);
 
-        OffDamaged(); // ¹«Àû ÇØÁ¦
+        OffDamaged(); // ì„ì‹œ ë¬´ì  ë³µê·€
     }
 
 
@@ -443,9 +437,9 @@ public class PlayerMove : MonoBehaviour
             yield break;
         }
 
-        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, true); // ÇÃ·¹ÀÌ¾î¿Í ÀûÀÇ Ãæµ¹ ¹«½Ã
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, true); // í”Œë ˆì´ì–´ ì¶©ëŒ ë¬´ì‹œ
         yield return new WaitForSeconds(duration);
-        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false); // Ãæµ¹ º¹±¸
+        Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, false); // ì¶©ëŒ ë³µê·€
     }
 
 
@@ -462,11 +456,11 @@ public class PlayerMove : MonoBehaviour
         {
             Vector2 targetPos = collision.transform.position;
 
-            // ³Ë¹é ¸ÕÀú Àû¿ë
+            // í”Œë ˆì´ì–´ ì¶©ëŒ ì²˜ë¦¬
             OnDamaged(targetPos);
 
-            // PlayerHPÀÇ TakeDamage È£Ãâ
-            playerHP.TakeDamage(1, targetPos); // ´ë¹ÌÁö Ã³¸® ¹× ³Ë¹é Àû¿ë
+            // PlayerHPì— TakeDamage í˜¸ì¶œ
+            playerHP.TakeDamage(1, targetPos); // ì¶©ëŒ í›„ í”Œë ˆì´ì–´ ì²´ë ¥ ê°ì†Œ
         }
     }
 
