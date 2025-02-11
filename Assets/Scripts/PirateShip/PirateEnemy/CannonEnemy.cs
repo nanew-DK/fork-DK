@@ -13,10 +13,10 @@ public class CannonEnemy : BasicEnemy
             return;
         }
         Vector3 spawnPosition = new Vector3(transform.position.x - 8.5f, transform.position.y, transform.position.z);
-        // 대포알 생성
         GameObject CF = Instantiate(cannonField, spawnPosition, transform.rotation);
-        Debug.Log("적 : 대포 발사!");
+        StartCoroutine(PlayAnimation());
         Destroy(CF, 2f);
         Invoke("Attack", 4f);
     }
+    
 }

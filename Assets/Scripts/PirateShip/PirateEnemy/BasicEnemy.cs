@@ -5,27 +5,25 @@ using UnityEngine;
 
 public class BasicEnemy : MonoBehaviour
 {
-    protected float Hp = 2f;
+    protected int Hp = 2;
 
     protected float speed = 3f;
 
     bool arrive = false;//다 내려갔으면 true 로 바뀜
     protected GameObject boundary;//어디까지 내려가는지
 
+    [SerializeField] protected Animator animator;
+
 
     private void Start()
     {
+        if(animator == null)    animator = GetComponent<Animator>();
         StartCoroutine(Move());
     }
 
     public void SetBoundary(GameObject bndry)
     {
         boundary = bndry;
-    }
-    private void OnDestroy()
-    {
-        SpawnEnemy spawner = GetComponentInParent<SpawnEnemy>();
-        spawner.decreaseNumOfEnemies();
     }
 
     protected IEnumerator Move()
@@ -54,11 +52,19 @@ public class BasicEnemy : MonoBehaviour
         Hp--;
         CheckHp();
     }
-    private void CheckHp()
+    protected void CheckHp()
     {
         if (Hp == 0)
         {
+            SpawnEnemy spawner = GetComponentInParent<SpawnEnemy>();
+            spawner.decreaseNumOfEnemies();
             Destroy(this.gameObject);
         }
+    }
+    protected IEnumerator PlayAnimation()
+    {
+        animator.SetBool("Attack", true);
+        yield return new WaitForSeconds(0.1f);
+        animator.SetBool("Attack", false);
     }
 }

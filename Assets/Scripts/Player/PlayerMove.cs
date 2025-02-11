@@ -54,6 +54,15 @@ public class PlayerMove : MonoBehaviour
     float DamageUpTime = 1f;                         // 패링 성공 후 데미지 증가 시간
     public GameObject shield;                         // 방패 오브젝트
 
+    [Header("동료스킬 관련 변수")]
+    private int skillUnlock = 1;
+    public SkillEffect skillPanel;
+    public GameObject skillRange;
+    public GameObject mainCamera;
+    private bool canUseSkill = true;
+    private float lastSkillTime = -10f;
+    private float skillCooldown = 10f;
+
     private SpriteRenderer spriteRenderer;
 
     private float originalGravityScale; // 원래 중력 스케일
@@ -88,6 +97,10 @@ public class PlayerMove : MonoBehaviour
             moveInput = 0f;
         }
 
+        if (Input.GetKeyDown(KeySetting.Keys[KeyAction.SKILL_1]))
+        {
+            DoSkill();
+        }
 
 
         if (Input.GetKeyDown(KeySetting.Keys[KeyAction.UP]) && IsGrounded())//기본 점프
@@ -231,6 +244,33 @@ public class PlayerMove : MonoBehaviour
         }
 
         Physics2D.IgnoreLayerCollision(playerLayer, enemyLayer, ignore);
+    }
+
+    private void DoSkill()
+    {
+        if (!canUseSkill || Time.time < lastSkillTime + skillCooldown)
+        {
+            Debug.Log("스킬 쿨타임 중!");
+            return;
+        }
+
+        canUseSkill = false;
+        lastSkillTime = Time.time;
+
+        skillPanel.PlaySkillEffect();
+        Debug.Log("doing skill");
+        CameraMove cameraMove = mainCamera.GetComponent<CameraMove>();
+        cameraMove.StartShake();
+        GameObject StunRange = Instantiate(skillRange, transform.position, Quaternion.identity);
+        Destroy(StunRange, 0.1f);
+
+        StartCoroutine(ResetSkillCooldown());
+    }
+
+    private IEnumerator ResetSkillCooldown()
+    {
+        yield return new WaitForSeconds(skillCooldown);
+        canUseSkill = true;
     }
 
     IEnumerator Parrying()

@@ -11,6 +11,7 @@ public class DiePanel : MonoBehaviour
     }
     public void Bravo6()
     {
-        animator.SetTrigger("GoingDark");
+        Debug.Log("다이패널");
+        animator.SetTrigger("Dying");
     }
 }

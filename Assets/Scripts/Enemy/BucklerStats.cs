@@ -11,18 +11,14 @@ public class BucklerStats : EnemyStats
         curHp = maxHp;
         damage = 2f;
     }
-    
+
     public override void TakeDamage(float damage, Transform player)
     {
-        if ( isDie) return;
-        Debug.Log("Enemy hit" + damage);;
+        if (isDie) return;
+        Debug.Log("Enemy hit" + damage); ;
         if (this.gameObject.transform.rotation.y == 0)//적이 왼쪽을 보고 있을 때
         {
-            if (player.transform.position.x < gameObject.transform.position.x)//플레이어가 적의 왼쪽에 있을 경우 
-            {
-                
-            }
-            else
+            if (player.transform.position.x > gameObject.transform.position.x)//플레이어가 적의 왼쪽에 있을 경우 
             {
                 curHp -= damage + 1;
             }
@@ -32,10 +28,6 @@ public class BucklerStats : EnemyStats
             if (player.transform.position.x < gameObject.transform.position.x)//플레이어가 적의 왼쪽에 있을 경우 
             {
                 curHp -= damage + 1;//백어택
-            }
-            else
-            {
-                
             }
         }
 

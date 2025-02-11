@@ -4,19 +4,21 @@ using UnityEngine;
 
 public class Heart : Object
 {
-    
-    private void Start()
+    [SerializeField] PirateManager pirateManager;
+
+    protected override void Awake()
     {
-        speed = 5f;
+        base.Awake();
+        speed = 2f;
+        pirateManager = GameObject.Find("GameManager").GetComponent<PirateManager>();
     }
 
-    protected override void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             Destroy(this.gameObject);
-            //PlayerShip playerScript = collision.GetComponent<PlayerShip>();
-            //playerScript.GetHeart();
+            pirateManager.UpHeart();
         }
     }
 }

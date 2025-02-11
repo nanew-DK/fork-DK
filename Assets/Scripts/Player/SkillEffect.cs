@@ -20,7 +20,7 @@ public class SkillEffect : MonoBehaviour
     public void PlaySkillEffect()
     {
         this.gameObject.SetActive(true);  // 패널 보이게 하기
-        anim.SetTrigger("Play"); // 애니메이션 실행
+        anim.SetTrigger("UseSkill"); // 애니메이션 실행
 
         // 일정 시간 후 패널 숨기기
         Invoke("EndEffect", 1.35f);

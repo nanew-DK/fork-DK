@@ -14,5 +14,4 @@ public class Water : MonoBehaviour
             playerHP.TakeDamage(100, transform.position);
         }
     }
-
 }

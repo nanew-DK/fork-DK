@@ -9,7 +9,7 @@ TagManager:
   - Boss
   - StopLine
   - PlayerAttack
-  - NPC
+  - Obstacle
   layers:
   - Default
   - TransparentFX
@@ -24,7 +24,7 @@ TagManager:
   - PlayerDamaged
   - Player
   - Enemy
-  - NPC
+  - 
   - 
   - 
   - 

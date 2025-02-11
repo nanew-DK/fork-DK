@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpawnEnemy : MonoBehaviour
 {
-    private int enemyNum = 0;
+    [SerializeField] private int enemyNum = 0;
     [SerializeField] int enemyLimit = 3;
     
     [SerializeField] private float coolTime = 3f;

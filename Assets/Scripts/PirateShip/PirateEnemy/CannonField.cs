@@ -6,13 +6,6 @@ public class CannonField : MonoBehaviour
 {
     PirateManager pirateManager;
     bool exit=false;
-    public class PirateManager : MonoBehaviour
-    {
-        public void DownHeart()
-        {
-            // 체력 감소 로직
-        }
-    }
     void Awake()
     {
         pirateManager = GameObject.Find("GameManager").GetComponent<PirateManager>();

@@ -6,16 +6,29 @@ using UnityEngine.UI;
 
 public class PirateManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [Header("Hearts")]
+    [SerializeField] public GameObject heart1;//가장 왼쪽 하트
+    [SerializeField] public GameObject heart2;
+    [SerializeField] public GameObject heart3;
+    [SerializeField] public GameObject heart4;
+    [SerializeField] public GameObject heart5;//가장 오른쪽 하트
+    int heart = 5;
 
-    float clearRate = 0f;
-    float targetRate = 100f;
+
+
+    [Header("ClearRate")]
+    [SerializeField] float clearRate = 0f;
     [SerializeField] private float targetTime = 10f;
     private float ratePerFrame;
+    private float targetRate = 100f;
+
+
+    
 
     private void Awake()
     {
         clearRate = 0f;
+        heart = 5;
         ratePerFrame=targetRate/targetTime;
     }
     private void Start()
@@ -34,14 +47,37 @@ public class PirateManager : MonoBehaviour
         else
         {
             clearRate += ratePerFrame*Time.deltaTime;
-
         }
     }
 
     public void ReStart()
     {
         clearRate = 0f;
-        //or
-        //SceneManager.LoadScene("PirateScene");
+        heart = 5;
+        SceneManager.LoadScene("PirateShip");
+    }
+    public void UpHeart()
+    {
+        if (heart == 5) return;
+        heart++;
+        CheckHeart();
+    }
+    public void DownHeart()
+    {
+        heart--;
+        CheckHeart();
+        if (heart == 0) ReStart();
+    }
+    public int GetHeart()
+    {
+        return heart;
+    }
+    void CheckHeart()
+    {
+        heart1.SetActive(heart >= 1);
+        heart2.SetActive(heart >= 2);
+        heart3.SetActive(heart >= 3);
+        heart4.SetActive(heart >= 4);
+        heart5.SetActive(heart >= 5);
     }
 }

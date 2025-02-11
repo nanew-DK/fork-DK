@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class PlayerHP : MonoBehaviour
 {
     public GameObject heartPrefab;  // 하트 프리팹
+    public GameObject diePanel; // 사망 패널
     public int maxHP = 5;  // 최대 체력
     public int currentHP = 5;  // 현재 체력
     public List<GameObject> heartObjects = new List<GameObject>();  // 하트 GameObject 리스트
@@ -64,6 +65,30 @@ public class PlayerHP : MonoBehaviour
     public void Die()
     {
         Debug.Log("플레이어 사망");
+
+        if (diePanel != null)
+        {
+            DiePanel panelScript = diePanel.GetComponent<DiePanel>();
+            if (panelScript != null)
+            {
+                panelScript.Bravo6(); // 애니메이션 실행
+            }
+            else
+            {
+                Debug.LogWarning("diePanel에 DiePanel 스크립트가 없음.");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("diePanel이 할당되지 않았음.");
+        }
+
+        Invoke("LoadGameOverScene", 0.5f);
+    }
+
+    // 게임 오버 씬 로드
+    private void LoadGameOverScene()
+    {
         SceneManager.LoadScene("Gameover");
     }
 

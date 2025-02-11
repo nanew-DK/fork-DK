@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class NER : EnemyMove
 {
-    [SerializeField] float attackSpeed = 2f;
-
     public GameObject attackRange;
     public GameObject NER_bullet;
     private GameObject target;
@@ -21,6 +19,8 @@ public class NER : EnemyMove
     //명령
     private void Update()
     {
+        if (isStunned == true) return;
+        anim.speed = 1f * 2f / attackSpeed;
         if (canAttack && Wait)
         {
             Attack();
@@ -34,6 +34,7 @@ public class NER : EnemyMove
     //사거리 받기
     void Start()
     {
+        attackSpeed = 2f;
         rangeCollider = attackRange.GetComponent<CircleCollider2D>();
         rangeCollider.isTrigger = true;
         takeDamageCollider = GetComponent<BoxCollider2D>();
@@ -58,7 +59,6 @@ public class NER : EnemyMove
         {
             target = null;
             StopMoving();
-            anim.SetBool("isAttacking", false);
             anim.SetBool("isReady", false);
             canAttack = false;
             speed = 2.5f;
@@ -81,7 +81,7 @@ public class NER : EnemyMove
     //실제 공격
     private void Attack()
     {
-        anim.SetBool("isAttacking", true);
+        anim.SetTrigger("isTrigger");
         Vector3 directionToPlayer = target.transform.position - transform.position;
         directionToPlayer.z = 0f;
 

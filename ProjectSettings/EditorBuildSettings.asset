@@ -23,7 +23,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/VROUW/SaveLoad.unity
     guid: 943a5c30294159849baa98d89a6683c7
-  - enabled: 1
-    path: Assets/Scenes/VROUW/PirateShip.unity
-    guid: c1e76a25efc0f0d48a452c7deafd7244
   m_configObjects: {}

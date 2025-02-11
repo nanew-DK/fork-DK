@@ -2,21 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OakBarrel : Object
+public class OakBarrel : Object//Rock
 {
+    PirateManager pirateManager;
     // Start is called before the first frame update
-    private void Start()
+    protected override void Awake()
     {
-        speed = 7f;
+        base.Awake();
+        speed = 1f;
+        pirateManager = GameObject.Find("GameManager").GetComponent<PirateManager>();
     }
-    
-    protected override void OnTriggerEnter2D(Collider2D collision)
+
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
             Destroy(this.gameObject);
-            //PlayerShip playerScript = collision.GetComponent<PlayerShip>();
-            //playerScript.TakeDamage(2f);
+            pirateManager.DownHeart();
         }
     }
 }

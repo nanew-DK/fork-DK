@@ -12,5 +12,10 @@ public class Potan : MonoBehaviour
             BE.TakeDamage();
             Destroy(this.gameObject);
         }
+        else if(collision.name== "Obstacle(Clone)")
+        {
+            Destroy(this.gameObject);
+            Destroy(collision.gameObject);
+        }
     }
 }

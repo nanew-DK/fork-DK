@@ -23,8 +23,8 @@ public class SpawnObject : MonoBehaviour
     {
         while (true)
         {
-            Vector2 randomPos=new(screenWidth,Random.Range(-screenHeight, screenHeight));
-            Instantiate(Item, randomPos,Quaternion.identity,this.transform);
+            Vector3 randomPos=new(screenWidth,Random.Range(-screenHeight, screenHeight),0);
+            Instantiate(Item, randomPos,Quaternion.identity,transform);
             yield return new WaitForSeconds(coolTime);
         }
     }

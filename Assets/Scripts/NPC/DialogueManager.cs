@@ -1,84 +1,84 @@
-ï»¿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
-    public GameObject dialoguePanel; // ëŒ€í™”ì°½ íŒ¨ë„
-    public Text nameText; // ìºë¦­í„° ì´ë¦„ í…ìŠ¤íŠ¸
-    public Image speakerImage; // ìºë¦­í„° ì´ë¯¸ì§€ (UI Image)
-    public Text dialogueText; // ëŒ€í™” ë‚´ìš© í…ìŠ¤íŠ¸
+    public GameObject dialoguePanel; // ´ëÈ­Ã¢ ÆĞ³Î
+    public Text nameText; // Ä³¸¯ÅÍ ÀÌ¸§ ÅØ½ºÆ®
+    public Image speakerImage; // Ä³¸¯ÅÍ ÀÌ¹ÌÁö (UI Image)
+    public Text dialogueText; // ´ëÈ­ ³»¿ë ÅØ½ºÆ®
 
-    public DialogueData dialogueData; // ëŒ€í™” ë°ì´í„°
-    private int currentLineIndex = 0; // í˜„ì¬ ëŒ€ì‚¬ ì¸ë±ìŠ¤
-    private bool isDialogueActive = false; // ëŒ€í™” í™œì„±í™” ìƒíƒœ (private ìœ ì§€)
+    public DialogueData dialogueData; // ´ëÈ­ µ¥ÀÌÅÍ
+    private int currentLineIndex = 0; // ÇöÀç ´ë»ç ÀÎµ¦½º
+    private bool isDialogueActive = false; // ´ëÈ­ È°¼ºÈ­ »óÅÂ (private À¯Áö)
 
-    public bool IsDialogueActive => isDialogueActive; // isDialogueActive í”„ë¡œí¼í‹° ì¶”ê°€
+    public bool IsDialogueActive => isDialogueActive; // isDialogueActive ÇÁ·ÎÆÛÆ¼ Ãß°¡
 
-    public Transform player; // í”Œë ˆì´ì–´ì˜ Transform (ì´ê±¸ë¡œ ê±°ë¦¬ ì²´í¬)
-    public Transform npc; // NPCì˜ Transform
-    public float dialogueTriggerDistance = 2f; // ëŒ€í™”ê°€ ì‹œì‘ë  ê±°ë¦¬ (ê¸°ë³¸ê°’ 2f)
+    public Transform player; // ÇÃ·¹ÀÌ¾îÀÇ Transform (ÀÌ°É·Î °Å¸® Ã¼Å©)
+    public Transform npc; // NPCÀÇ Transform
+    public float dialogueTriggerDistance = 2f; // ´ëÈ­°¡ ½ÃÀÛµÉ °Å¸® (±âº»°ª 2f)
 
     void Start()
     {
-        dialoguePanel.SetActive(false); // ëŒ€í™”ì°½ì„ ì´ˆê¸°ì—ëŠ” ë¹„í™œì„±í™”
+        dialoguePanel.SetActive(false); // ´ëÈ­Ã¢À» ÃÊ±â¿¡´Â ºñÈ°¼ºÈ­
     }
 
     void Update()
     {
-        // í”Œë ˆì´ì–´ì™€ NPC ì‚¬ì´ì˜ ê±°ë¦¬ë¥¼ ê³„ì‚°
+        // ÇÃ·¹ÀÌ¾î¿Í NPC »çÀÌÀÇ °Å¸®¸¦ °è»ê
         float distance = Vector3.Distance(player.position, npc.position);
 
-        if (distance <= dialogueTriggerDistance) // ì¼ì • ê±°ë¦¬ ì´ë‚´ì— ìˆì„ ë•Œë§Œ ëŒ€í™” ì‹œì‘ ê°€ëŠ¥
+        if (distance <= dialogueTriggerDistance) // ÀÏÁ¤ °Å¸® ÀÌ³»¿¡ ÀÖÀ» ¶§¸¸ ´ëÈ­ ½ÃÀÛ °¡´É
         {
-            if (Input.GetKeyDown(KeyCode.Space)) // ëŒ€í™” ì¤‘ Space í‚¤ë¥¼ ëˆŒë €ì„ ë•Œ
+            if (Input.GetKeyDown(KeyCode.Space)) // ´ëÈ­ Áß Space Å°¸¦ ´­·¶À» ¶§
             {
                 if (!isDialogueActive)
                 {
-                    // ëŒ€í™”ê°€ ì‹œì‘ë˜ì§€ ì•Šì•˜ë‹¤ë©´ ëŒ€í™” ì‹œì‘
+                    // ´ëÈ­°¡ ½ÃÀÛµÇÁö ¾Ê¾Ò´Ù¸é ´ëÈ­ ½ÃÀÛ
                     StartDialogue(dialogueData);
                 }
                 else
                 {
-                    // ëŒ€í™” ì¤‘ì´ë¼ë©´ ëŒ€ì‚¬ ì§„í–‰
+                    // ´ëÈ­ ÁßÀÌ¶ó¸é ´ë»ç ÁøÇà
                     ShowNextDialogue();
                 }
             }
         }
     }
 
-    // ëŒ€í™” ì‹œì‘
+    // ´ëÈ­ ½ÃÀÛ
     public void StartDialogue(DialogueData newDialogue)
     {
         dialogueData = newDialogue;
-        dialoguePanel.SetActive(true); // ëŒ€í™”ì°½ í™œì„±í™”
+        dialoguePanel.SetActive(true); // ´ëÈ­Ã¢ È°¼ºÈ­
         isDialogueActive = true;
         currentLineIndex = 0;
-        ShowNextDialogue(); // ì²« ë²ˆì§¸ ëŒ€ì‚¬ ë³´ì—¬ì£¼ê¸°
+        ShowNextDialogue(); // Ã¹ ¹øÂ° ´ë»ç º¸¿©ÁÖ±â
     }
 
-    // ëŒ€ì‚¬ ì§„í–‰
+    // ´ë»ç ÁøÇà
     public void ShowNextDialogue()
     {
         if (currentLineIndex < dialogueData.lines.Length)
         {
             DialogueLine line = dialogueData.lines[currentLineIndex];
-            nameText.text = line.speakerName; // ìºë¦­í„° ì´ë¦„
-            speakerImage.sprite = line.speakerImage; // ìºë¦­í„° ì´ë¯¸ì§€
-            dialogueText.text = line.dialogueText; // ëŒ€í™” ë‚´ìš©
+            nameText.text = line.speakerName; // Ä³¸¯ÅÍ ÀÌ¸§
+            speakerImage.sprite = line.speakerImage; // Ä³¸¯ÅÍ ÀÌ¹ÌÁö
+            dialogueText.text = line.dialogueText; // ´ëÈ­ ³»¿ë
 
-            currentLineIndex++; // ë‹¤ìŒ ëŒ€ì‚¬ë¡œ ë„˜ì–´ê°€ê¸°
+            currentLineIndex++; // ´ÙÀ½ ´ë»ç·Î ³Ñ¾î°¡±â
         }
         else
         {
-            EndDialogue(); // ëŒ€í™”ê°€ ëë‚¬ìœ¼ë©´ ì¢…ë£Œ
+            EndDialogue(); // ´ëÈ­°¡ ³¡³µÀ¸¸é Á¾·á
         }
     }
 
-    // ëŒ€í™” ì¢…ë£Œ
+    // ´ëÈ­ Á¾·á
     private void EndDialogue()
     {
-        dialoguePanel.SetActive(false); // ëŒ€í™”ì°½ ë¹„í™œì„±í™”
-        isDialogueActive = false; // ëŒ€í™” ì¢…ë£Œ ìƒíƒœ
-        currentLineIndex = 0; // ì¸ë±ìŠ¤ ì´ˆê¸°í™”
+        dialoguePanel.SetActive(false); // ´ëÈ­Ã¢ ºñÈ°¼ºÈ­
+        isDialogueActive = false; // ´ëÈ­ Á¾·á »óÅÂ
+        currentLineIndex = 0; // ÀÎµ¦½º ÃÊ±âÈ­
     }
 }

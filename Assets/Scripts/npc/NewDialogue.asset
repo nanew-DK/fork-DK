@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: NewDialogue
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueData
+  lines:
+  - speakerName: coll
+    speakerImage: {fileID: 21300000, guid: e7b84515548e3674ebecf8bde0adee6f, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: "\uCC98\uC74C \uBCF4\uB294 \uC5BC\uAD74\uC774\uB124\uC694. \uC5EC\uAE30
+      \uC0AC\uB78C \uAC19\uC9C4 \uC54A\uC740\uB370.."
+  - speakerName: cap
+    speakerImage: {fileID: 21300000, guid: 2b0ec14e9c9c620419cfee106a709ce3, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: "\uADF8\uB798\uBCF4\uC774\uB098? \uB098\uB984 \uC798 \uB179\uC544\uB4E4\uC5C8\uB2E4\uACE0
+      \uC0DD\uAC01\uD588\uB294\uB370.. \uADF8\uAC74 \uADF8\uB807\uACE0 \uB108\uB3C4
+      \uC5EC\uAE30 \uC0AC\uB78C \uAC19\uC9C0\uB294 \uC54A\uC544\uBCF4\uC774\uB294\uB370?"
+  - speakerName: coll
+    speakerImage: {fileID: 21300000, guid: e7b84515548e3674ebecf8bde0adee6f, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: "\uD558\uD558 \uB9DE\uC544\uC694. \uC774 \uB9C8\uC744 \uC0AC\uB78C\uC774
+      \uC544\uB2D9\uB2C8\uB2E4. \uC7A0\uC2DC \uBAA9\uC801\uC774 \uC788\uC5B4\uC11C
+      \uBA38\uBB3C \uBFD0\uC785\uB2C8\uB2E4."
+  - speakerName: cap
+    speakerImage: {fileID: 21300000, guid: 2b0ec14e9c9c620419cfee106a709ce3, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: "\uBAA9\uC801\uC774\uB77C...  \uAD81\uAE08\uD55C\uB370, \uBB34\uC2A8
+      \uBAA9\uC801\uC774\uC9C0?"
+  - speakerName: coll
+    speakerImage: {fileID: 21300000, guid: e7b84515548e3674ebecf8bde0adee6f, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: "... \uD06C\uB77C\uCF04 \uB54C\uBB38\uC5D0\uC694 \uD558\uD558.."
+  - speakerName: cap
+    speakerImage: {fileID: 21300000, guid: 2b0ec14e9c9c620419cfee106a709ce3, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: "\uD06C\uB77C\uCF04? \uC124\uB9C8, \uADF8 \uBC14\uB2E4 \uAD34\uBB3C
+      \uD06C\uB77C\uCF04\uC744 \uB9D0\uD558\uB294 \uAC74\uAC00?"
+  - speakerName: coll
+    speakerImage: {fileID: 21300000, guid: 2b0ec14e9c9c620419cfee106a709ce3, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: " \uB124. \uB140\uC11D\uC774 \uC6B0\uB9AC \uAC00\uC871\uC744 \uB9DD\uAC00\uB728\uB838\uC5B4\uC694.
+      \uC800\uD76C \uC544\uBC84\uC9C0\uB294 \uCD5C\uACE0\uC758 \uD56D\uD574\uC0AC\uC600\uC9C0\uB9CC,
+      \uD06C\uB77C\uCF04\uC758 \uC2B5\uACA9\uC73C\uB85C \uBAA8\uB4E0 \uAC78 \uC783\uC5C8\uAC70\uB4E0\uC694.
+      \uBC30\uB3C4, \uC7AC\uC0B0\uB3C4, \uBA85\uC608\uB3C4. \uADF8\uB9AC\uACE0 \uC9C0\uAE08\uC740
+      \uBCD1\uC0C1\uC5D0 \uB204\uC6CC \uACC4\uC154\uC694. \uADF8 \uBD84\uC774 \uB5A0\uB098\uAE30
+      \uC804\uC5D0... \uB9C8\uC9C0\uB9C9\uC73C\uB85C \uAC00\uC871\uC758 \uBA85\uC608\uB97C
+      \uB418\uCC3E\uACE0 \uC2F6\uC5B4\uC11C\uC694.\uADF8\uB798\uC11C \uB140\uC11D\uC744
+      \uC7A1\uC544..!\uD558\uD558 \uC81C\uAC00 \uC4F8\uB370\uC5C6\uB294 \uC598\uAE30\uB97C
+      \uB9CE.."
+  - speakerName: cap
+    speakerImage: {fileID: 21300000, guid: 2b0ec14e9c9c620419cfee106a709ce3, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: "\uC7AC\uBC0C\uACA0\uAD70."
+  - speakerName: cap
+    speakerImage: {fileID: 21300000, guid: 2b0ec14e9c9c620419cfee106a709ce3, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: "\uD06C\uB77C\uCF04\uC774\uB77C... \uB098\uC058\uC9C0 \uC54A\uACA0\uC5B4..
+      \uC88B\uC544 \uB3C4\uC640\uC8FC\uC9C0"
+  - speakerName: coll
+    speakerImage: {fileID: 21300000, guid: e7b84515548e3674ebecf8bde0adee6f, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: "\uADF8\uAC8C \uBB34\uC2A8.. \uB3C4\uC640\uC8FC\uC2E0\uB2E4\uACE0\uC694??"
+  - speakerName: cap
+    speakerImage: {fileID: 21300000, guid: 2b0ec14e9c9c620419cfee106a709ce3, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: "\uADF8\uB798. \uD558\uC9C0\uB9CC \uB0B4 \uBC29\uC2DD\uB300\uB85C."
+  - speakerName: coll
+    speakerImage: {fileID: 21300000, guid: e7b84515548e3674ebecf8bde0adee6f, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: "...\uBC29\uC2DD\uC774\uB77C\uBA74?"
+  - speakerName: cap
+    speakerImage: {fileID: 21300000, guid: e7b84515548e3674ebecf8bde0adee6f, type: 3}
+    speakerImage2: {fileID: 0}
+    dialogueText: "\uADF8\uAC74 \uC9C1\uC811 \uBCF4\uBA74 \uC54C\uAC8C \uB420 \uAC70\uC57C.\r\n"

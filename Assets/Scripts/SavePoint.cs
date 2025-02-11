@@ -6,6 +6,7 @@ public class SavePoint : MonoBehaviour
 {
     [SerializeField] int savePos = 0;
 
+
     public static int savePointIndex = 0;
     public static int currentSavePoint = 0;
     private bool usedSave = false;
