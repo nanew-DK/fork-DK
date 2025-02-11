@@ -7,16 +7,6 @@ public class GameOverManager : MonoBehaviour
 {
     public GameObject arrowMark;
 
-    public static class SaveLoad
-    {
-        public static int currentSelectedSlot = 0;
-    }
-
-    public static class SavePoint
-    {
-        public static int diePoint = 0;
-    }
-
     private void Start()
     {
         arrowMark.SetActive(false);

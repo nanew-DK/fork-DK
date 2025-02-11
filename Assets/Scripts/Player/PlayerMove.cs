@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.Net;
 using Unity.VisualScripting;
 using UnityEditor.Experimental;
-using UnityEditor.Experimental.GraphView;
-using UnityEditor.Tilemaps;
+using UnityEngine.Tilemaps;
 using UnityEngine;
 using UnityEngine.UI;
+
+#if UNITY_EDITOR
+using UnityEditor.Experimental.GraphView;
+#endif
 
 public class PlayerMove : MonoBehaviour
 {
