@@ -73,7 +73,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 20.48, y: 20.48}
+    oldSize: {x: 13, y: 16}
     newSize: {x: 20.48, y: 20.48}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -125,11 +125,11 @@ MonoBehaviour:
   render: {fileID: 0}
   boxCollider: {fileID: 0}
   speed: 2.5
+  attackSpeed: 2
   followDistance: 1
   stopChaseRange: 2
   Hp: 2
   knockbackForce: 10
-  attackSpeed: 2
   attackRange: {fileID: 5550329177433008112}
   NER_bullet: {fileID: 2098952004656492760, guid: 8a8a31fb43a90774982b8da6cd0baa78, type: 3}
 --- !u!212 &8426315382932066431
@@ -173,7 +173,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 10931ce83d5525d449b4a6b3da3d1d51, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 35eda296fdc688d48a844579d273a7a7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

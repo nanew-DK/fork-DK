@@ -190,7 +190,7 @@ MonoBehaviour:
     m_Bits: 64
   curHealth: 0
   maxHealth: 0
-  HpBarSlider: {fileID: 0}
+  SkillRange: {fileID: 8926651971733434597, guid: 1d7f23e8d0435df4497e1235dfbca4f6, type: 3}
   shield: {fileID: 0}
 --- !u!114 &8790162027192891255
 MonoBehaviour:
@@ -204,8 +204,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6e7b43a68f2fde4dbfa9e96afda712b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HpBarSlider: {fileID: 0}
+  heartPrefab: {fileID: 0}
   maxHP: 5
+  currentHP: 5
+  heartObjects: []
+  invincibilityDuration: 1
 --- !u!114 &4234066923304759690
 MonoBehaviour:
   m_ObjectHideFlags: 0

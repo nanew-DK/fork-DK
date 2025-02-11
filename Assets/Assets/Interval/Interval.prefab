@@ -176,3 +176,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Size: {fileID: 3881516144208176983}
+  numOfEnemies: 0
+  isPlayerInterval: 0
+  stageClear: 0
+  doorOpen: 0
+  door: []
